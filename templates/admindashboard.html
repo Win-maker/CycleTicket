@@ -1,0 +1,87 @@
+{%extends'layout/layout.html'%}
+{%block content%}
+<div style="width:100vw;height:100%;background-image:linear-gradient(#6dd5ed,#2193b0)">
+  <div class="row">
+    <div class="col">
+      <h2 class="text-center mb-5 mt-3">Admin Dashboard</h2>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">User Name</th>
+                <th scope="col">Tickets</th>
+                <th scope="col">Payment</th>
+                <th scope="col">Confirmation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%for order in order_tickets%}
+              <tr style="border-bottom:1px solid white;width:100%">
+                <th scope="row">{{order.id}}</th>
+                <td>{{order.user_name}}</td>
+                <td>{{order.ticket}}</td>
+
+                <td>
+                  <div class="px-2 py-1">
+                  {% if order.img  and order.payment %}
+                  <pre>Transation Id - {{order.payment['Transation Id']}}</pre>
+                  <pre>Date - {{order.payment['Date']}}</pre>
+                  <pre>Transfer To - {{order.payment['Name']}}</pre>
+                  <pre>Phone - {{order.payment['Phone']}}</pre>
+                  <pre>Amount - {{order.payment['Amount']}}</pre>
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    See Payment
+                  </button>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="staticBackdropLabel">Payment Screenshot</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <img src="data:image/jpeg;base64,{{order.img}}" alt="Image" style="width:450px;height:500px"/>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+   
+                  {% else %}
+                    -
+                  {% endif %}
+                  </div>
+
+                </td>
+                
+
+                <td class="d-inline-flex" style="border-bottom:none">
+                  {%if order.verify == 'Pending'%}
+                  <form action="/submit/{{order.id}}" method="POST" type="submit">
+                    <button class="btn-primary btn-sm">Verify</button>
+                  </form>
+                  <form action="/admindelete/{{order.id}}" method="POST" type="submit">
+                    <button class="btn btn-danger btn-sm ml-3">Decline</button>
+                  </form>
+                  {%elif order.verify == 'Accepted'%}
+                  <b>Accepted</b>
+                  {%else%}
+                  <b>Rejected</b>
+                  {%endif%}
+                </td>
+              </tr>
+
+              {%endfor%}
+            </tbody>
+          </table>
+    </div>
+</div>
+</div>
+{%endblock%}
+
+<!--  -->
